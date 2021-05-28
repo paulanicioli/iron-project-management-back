@@ -7,13 +7,13 @@ class ProjectsController {
 
   getMany = async (req, res, next) => {
     try {
-      const projects = await this.Projects.find();
+      const projects = await this.Projects.find({ user: req.user.id });
 
       res.status(200).json(projects);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   getOne = async (req, res, next) => {
     try {
@@ -30,11 +30,11 @@ class ProjectsController {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   createOne = async (req, res, next) => {
     try {
-      const newProject = new this.Projects(req.body);
+      const newProject = new this.Projects({ ...req.body, user: req.user.id });
 
       await newProject.save();
 
@@ -42,11 +42,14 @@ class ProjectsController {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   updateOne = async (req, res, next) => {
     try {
-      const { params: { id }, body } = req;
+      const {
+        params: { id },
+        body,
+      } = req;
 
       await this.Projects.findByIdAndUpdate(id, body);
 
@@ -54,7 +57,7 @@ class ProjectsController {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   deleteOne = async (req, res, next) => {
     try {
@@ -62,8 +65,7 @@ class ProjectsController {
     } catch (error) {
       console.log(error);
     }
-  }
-
+  };
 }
 
 module.exports = new ProjectsController();
